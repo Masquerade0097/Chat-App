@@ -37,7 +37,11 @@ dependencies {
 
     compile 'com.android.support:design:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.google.firebase:firebase-database:9.6.0'
+    //firebase-databse version upgraded for using firebase UI auth library
+    compile 'com.google.firebase:firebase-database:9.8.0'
+
+    compile "com.google.firebase:firebase-auth:9.8.0"
+    compile 'com.firebaseui:firebase-ui-auth:1.0.0'
 
     // Displaying images
     compile 'com.github.bumptech.glide:glide:3.6.1'
