@@ -30,7 +30,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -141,27 +140,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                FriendlyMessage fm = dataSnapshot.getValue(FriendlyMessage.class);
-                mMessageAdapter.add(fm);
-            }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        };
-        mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
-
+        /*AuthStateListener helps to find out that the user is signed in or signed out and accordingly
+        we need to display login screen or chat screen*/
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -171,9 +153,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if(user != null){
                     //user is signed in
-                    Toast.makeText(MainActivity.this, "User is signed in", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "User is signed in", Toast.LENGTH_SHORT).show();
+                    onSignedInInitialize(user.getDisplayName());
+
                 }
                 else{
+                    onSignedOutCleanup();
+
                     providers.add(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
                     providers.add(new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
                     startActivityForResult(
@@ -204,12 +190,67 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        if(mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
+        detachDatabaseReadListener();
+        mMessageAdapter.clear();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    private void onSignedInInitialize(String username){
+//since we given read permissions to signed in users only so this code will help him to read messages
+
+        mUsername = username;
+        attachDatabaseReadListener();
+    }
+
+    private void onSignedOutCleanup(){
+        mUsername = ANONYMOUS;
+        mMessageAdapter.clear();
+        detachDatabaseReadListener();
+    }
+
+    private void attachDatabaseReadListener(){
+        /*ChildEventListener gets access to that particular child in database( in this case messages
+        child is accessed ) This listener will show us the previous available entries under "messages"
+        child and also the new entries added. The chat that we type first goes to database then this
+         childListener will listen it and make it appear in our screen*/
+
+        if(mChildEventListener == null){
+            mChildEventListener = new ChildEventListener() {
+
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    FriendlyMessage fm = dataSnapshot.getValue(FriendlyMessage.class);
+                    mMessageAdapter.add(fm);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+                 };
+            mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+        }
+    }
+
+    private void detachDatabaseReadListener(){
+        if( mChildEventListener != null){
+            mMessagesDatabaseReference.removeEventListener(mChildEventListener);
+            mChildEventListener = null;
+        }
     }
 }
