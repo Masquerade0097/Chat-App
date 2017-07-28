@@ -43,6 +43,9 @@ dependencies {
     compile "com.google.firebase:firebase-auth:9.8.0"
     compile 'com.firebaseui:firebase-ui-auth:1.0.0'
 
+    //file storage in firebase
+    compile 'com.firebaseui:firebase-ui-storage:1.0.0'
+
     // Displaying images
     compile 'com.github.bumptech.glide:glide:3.6.1'
 }
