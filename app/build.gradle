@@ -37,17 +37,18 @@ dependencies {
     //firebase-databse version upgraded for using firebase UI auth library
     
 
-    //file storage in firebase
-    
-    // Displaying images
     compile 'com.android.support:design:24.2.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.google.firebase:firebase-database:9.8.0'
     compile 'com.google.firebase:firebase-auth:9.8.0'
     compile 'com.firebaseui:firebase-ui-auth:1.0.0'
+    //file storage in firebase
     compile 'com.firebaseui:firebase-ui-storage:1.0.0'
+    // Displaying images
     compile 'com.github.bumptech.glide:glide:3.6.1'
-//    compile 'com.android.support:support-v4:24.2.1'
-//    testCompile 'junit:junit:4.12'
+
+    //notifications
+    compile 'com.google.firebase:firebase-messaging:9.8.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
