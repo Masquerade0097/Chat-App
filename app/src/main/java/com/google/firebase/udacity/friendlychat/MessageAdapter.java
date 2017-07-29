@@ -9,10 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
 public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
+
     public MessageAdapter(Context context, int resource, List<FriendlyMessage> objects) {
         super(context, resource, objects);
     }
@@ -35,6 +37,7 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
             photoImageView.setVisibility(View.VISIBLE);
             Glide.with(photoImageView.getContext())
                     .load(message.getPhotoUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(photoImageView);
         } else {
             messageTextView.setVisibility(View.VISIBLE);
@@ -43,6 +46,9 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
         }
         authorTextView.setText( "~" + message.getName());
 
+
+
         return convertView;
     }
+
 }

@@ -23,10 +23,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -49,6 +51,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.firebase.udacity.friendlychat.R.layout.item_message;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -106,8 +110,37 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize message ListView and its adapter
         List<FriendlyMessage> friendlyMessages = new ArrayList<>();
-        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, friendlyMessages);
+        mMessageAdapter = new MessageAdapter(this, item_message, friendlyMessages);
         mMessageListView.setAdapter(mMessageAdapter);
+
+
+        mMessageListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        @Override
+        public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
+
+            Log.v(LOG_TAG,"******Item is clicked");
+
+                FriendlyMessage item = (FriendlyMessage) adapter.getItemAtPosition(position);
+                if( item.getPhotoUrl() != null ){
+//                    ImageView photoClickView = (ImageView) findViewById(photoImageView);
+//                    photoClickView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+//                    photoClickView.setScaleType(ImageView.ScaleType.FIT_XY);
+
+                    Intent intent = new Intent(MainActivity.this, ImageActivity.class);
+                    intent.putExtra("imageUri", item.getPhotoUrl());
+                    startActivity(intent);
+
+                    Log.v(LOG_TAG,"Before Glide");
+//                    Glide.with(photoClickView.getContext())
+//                            .load(item.getPhotoUrl())
+//                            .diskCacheStrategy(DiskCacheStrategy.ALL) //use this to cache
+//                            .centerCrop()
+//                            .crossFade()
+//                            .into(photoClickView);
+                }
+            }
+        });
+
 
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -189,7 +222,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+
+//        final ImageView photoImage = (ImageView) findViewById(R.id.photoImageView);
+//
+//        final boolean[] isImageFitToScreen = {false};
+//
+//        photoImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(isImageFitToScreen[0]) {
+//                    isImageFitToScreen[0] =false;
+//                    photoImage.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+//                    photoImage.setAdjustViewBounds(true);
+//                }else{
+//                    isImageFitToScreen[0] =true;
+//                    photoImage.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+//                    photoImage.setScaleType(ImageView.ScaleType.FIT_XY);
+//                }
+//            }
+//        });
+
+
     }
+
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){

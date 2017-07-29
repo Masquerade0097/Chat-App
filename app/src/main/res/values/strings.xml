@@ -2,4 +2,10 @@
     <string name="app_name">Friendly Chat</string>
     <string name="sign_out">Sign Out</string>
     <string name="send_button_label">Send</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_image">ImageActivity</string>
 </resources>
