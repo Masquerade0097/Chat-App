@@ -23,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -118,32 +117,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
 
-            Log.v(LOG_TAG,"******Item is clicked");
-
                 FriendlyMessage item = (FriendlyMessage) adapter.getItemAtPosition(position);
                 if( item.getPhotoUrl() != null ){
-//                    ImageView photoClickView = (ImageView) findViewById(photoImageView);
-//                    photoClickView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-//                    photoClickView.setScaleType(ImageView.ScaleType.FIT_XY);
 
                     Intent intent = new Intent(MainActivity.this, ImageActivity.class);
                     intent.putExtra("imageUri", item.getPhotoUrl());
                     startActivity(intent);
-
-                    Log.v(LOG_TAG,"Before Glide");
-//                    Glide.with(photoClickView.getContext())
-//                            .load(item.getPhotoUrl())
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL) //use this to cache
-//                            .centerCrop()
-//                            .crossFade()
-//                            .into(photoClickView);
                 }
             }
         });
 
 
-        // Initialize progress bar
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
 
         // ImagePickerButton shows an image picker to upload a image for a message
         mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
@@ -222,27 +207,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-//        final ImageView photoImage = (ImageView) findViewById(R.id.photoImageView);
-//
-//        final boolean[] isImageFitToScreen = {false};
-//
-//        photoImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(isImageFitToScreen[0]) {
-//                    isImageFitToScreen[0] =false;
-//                    photoImage.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//                    photoImage.setAdjustViewBounds(true);
-//                }else{
-//                    isImageFitToScreen[0] =true;
-//                    photoImage.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-//                    photoImage.setScaleType(ImageView.ScaleType.FIT_XY);
-//                }
-//            }
-//        });
-
-
     }
 
 
@@ -344,6 +308,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     FriendlyMessage fm = dataSnapshot.getValue(FriendlyMessage.class);
                     mMessageAdapter.add(fm);
+                    // Initialize progress bar
+                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 }
 
                 @Override
