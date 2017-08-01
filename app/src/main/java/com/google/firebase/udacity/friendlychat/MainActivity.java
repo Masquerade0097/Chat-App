@@ -15,7 +15,10 @@
  */
 package com.google.firebase.udacity.friendlychat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +36,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton mPhotoPickerButton;
     private EditText mMessageEditText;
     private Button mSendButton;
+    private TextView emptyTextView;
 
     private String mUsername;
 
@@ -106,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
         mMessageEditText = (EditText) findViewById(R.id.messageEditText);
         mSendButton = (Button) findViewById(R.id.sendButton);
+        emptyTextView = (TextView) findViewById(R.id.empty_state);
 
         // Initialize message ListView and its adapter
         List<FriendlyMessage> friendlyMessages = new ArrayList<>();
@@ -126,6 +132,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Get details on the currently active default data network
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        // If there is a network connection, fetch data
+        if (networkInfo != null && networkInfo.isConnected()) {}
+        else {
+            // Update empty state with no connection error message
+            emptyTextView.setText(R.string.no_internet);
+        }
 
 
 
@@ -306,6 +326,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    emptyTextView.setText("");
                     FriendlyMessage fm = dataSnapshot.getValue(FriendlyMessage.class);
                     mMessageAdapter.add(fm);
                     // Initialize progress bar

@@ -65,4 +65,13 @@
         android:visibility="visible"
         android:theme="@style/RedAccent"
         android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textColor="#FFFFFF"
+        android:layout_centerInParent="true"
+        android:textAppearance="?android:textAppearanceMedium"/>
 </RelativeLayout>
